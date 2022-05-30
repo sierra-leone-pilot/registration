@@ -103,11 +103,11 @@ jobs:
 
         # Change all uppercase to lowercase
         IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-        if [[ $BRANCH_NAME == master ]]; then
-          VERSION=latest
-        else
+ #       if [[ $BRANCH_NAME == master ]]; then
+ #         VERSION=latest
+ #       else
           VERSION=$BRANCH_NAME
-        fi
+ #       fi
         echo IMAGE_ID=$IMAGE_ID
         echo VERSION=$VERSION
         docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
