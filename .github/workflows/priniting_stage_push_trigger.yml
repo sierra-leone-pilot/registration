@@ -61,10 +61,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v1
+        with:
+          name: release
+          path: ./
+
+      - name: Setup branch name
+        run: |
+          # Strip git ref prefix from version
+          echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e 's,.*/\(.*\),\1,')" >> $GITHUB_ENV
+
+      - name: Get version info from pom
+        id: getPomVersion
+        uses: mavrosxristoforos/get-xml-info@1.0
+        with:
+          xml-file: ./${{ env.SERVICE_LOCATION }}/pom.xml
+          xpath: /*[local-name()="project"]/*[local-name()="version"]
+
+      - name: Unzip and extract the ${{ env.SERVICE_NAME }}
+        run: unzip -uj "release.zip" "${{ env.SERVICE_LOCATION }}/target/*" -d "./${{ env.SERVICE_LOCATION }}/target"
+
     - name: Build registration-processor-stage-group-7 image
       run: |
         # The Mosip Stage Executor is not packaged as part of release.zip
-        cd registration-processor
         cd "./$SERVICE_LOCATION"
         docker build . --build-arg SOURCE=mosip --build-arg COMMIT_HASH=$(git rev-parse HEAD) --build-arg COMMIT_ID=$(git rev-parse --short HEAD) --build-arg BUILD_TIME=${{steps.date.outputs.date}} --file Dockerfile --tag $SERVICE_NAME
       env:
