@@ -55,6 +55,12 @@ jobs:
           name: release
           path: ./release.zip
 
+  docker-registration-processor-group7:
+    needs: build
+
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Build registration-processor-stage-group-7 image
       run: |
         # The Mosip Stage Executor is not packaged as part of release.zip
