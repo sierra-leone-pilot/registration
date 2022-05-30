@@ -72,25 +72,25 @@ jobs:
           SERVICE_NAME: registration-processor-stage-group-7
           SERVICE_LOCATION: registration-processor/stage-groups/registration-processor-stage-group-7
 
-    - name: Log into registry
-      run: echo "${{ secrets.release_docker_hub }}" | docker login -u ${{ secrets.actor_docker_hub }} --password-stdin
+      - name: Log into registry
+        run: echo "${{ secrets.release_docker_hub }}" | docker login -u ${{ secrets.actor_docker_hub }} --password-stdin
 
-    - name: Push image
-      run: |
-          IMAGE_ID=$NAMESPACE/$SERVICE_NAME
+      - name: Push image
+        run: |
+            IMAGE_ID=$NAMESPACE/$SERVICE_NAME
 
-          # Change all uppercase to lowercase
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          if [[ $BRANCH_NAME == master ]]; then
-            VERSION=latest
-          else
-            VERSION=$BRANCH_NAME
-          fi
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
-          docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION
-      env:
-        NAMESPACE: ${{ secrets.dev_namespace_docker_hub }}
-        SERVICE_NAME: registration-processor-stage-group-7
-        SERVICE_LOCATION: registration-processor/stage-groups/registration-processor-stage-group-7
+            # Change all uppercase to lowercase
+            IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+            if [[ $BRANCH_NAME == master ]]; then
+              VERSION=latest
+            else
+              VERSION=$BRANCH_NAME
+            fi
+            echo IMAGE_ID=$IMAGE_ID
+            echo VERSION=$VERSION
+            docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
+            docker push $IMAGE_ID:$VERSION
+        env:
+          NAMESPACE: ${{ secrets.dev_namespace_docker_hub }}
+          SERVICE_NAME: registration-processor-stage-group-7
+          SERVICE_LOCATION: registration-processor/stage-groups/registration-processor-stage-group-7
